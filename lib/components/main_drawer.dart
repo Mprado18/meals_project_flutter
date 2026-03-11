@@ -29,15 +29,13 @@ class MainDrawer extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.all(20),
             alignment: Alignment.bottomRight,
-            color: Theme.of(
-              context,
-            ).secondaryHeaderColor, // TODO ver qual é a opção no lugar de accentColor
+            color: Theme.of(context).colorScheme.secondary,
             child: Text(
               'Vamos cozinhar?',
               style: TextStyle(
                 fontWeight: FontWeight.w900,
                 fontSize: 30,
-                color: Theme.of(context).primaryColor,
+                color: Colors.white54,
               ),
             ),
           ),
