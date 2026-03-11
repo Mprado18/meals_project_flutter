@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:meals_project/model/meal.dart';
 
 class MealDetail extends StatelessWidget {
-  const MealDetail({super.key});
+  final Function(Meal) onToggleFavorite;
+  final bool Function(Meal) isFavorite;
+  const MealDetail(this.onToggleFavorite, this.isFavorite, {super.key});
 
   Widget _createSectionTitle(BuildContext context, String title) {
     return Container(
@@ -11,13 +13,13 @@ class MealDetail extends StatelessWidget {
     );
   }
 
-  Widget _createSectionContainer(Widget child) {
+  Widget _createSectionContainer(BuildContext context, Widget child) {
     return Container(
       width: 316,
       height: 264,
       decoration: BoxDecoration(
-        color: Color.fromARGB(255, 231, 229, 97),
-        border: Border.all(color: Color.fromARGB(255, 184, 182, 66)),
+        color: Theme.of(context).colorScheme.tertiary,
+        border: Border.all(color: Theme.of(context).colorScheme.tertiary),
         borderRadius: BorderRadius.circular(8),
       ),
       child: child,
@@ -42,6 +44,7 @@ class MealDetail extends StatelessWidget {
               ),
               _createSectionTitle(context, 'Ingredientes'),
               _createSectionContainer(
+                context,
                 ListView.builder(
                   itemCount: meal.ingredients.length,
                   itemBuilder: (context, index) {
@@ -51,7 +54,7 @@ class MealDetail extends StatelessWidget {
                         horizontal: 10,
                       ),
                       child: Card(
-                        color: const Color.fromARGB(255, 119, 65, 180),
+                        color: Theme.of(context).colorScheme.secondary,
                         child: Padding(
                           padding: const EdgeInsets.all(6),
                           child: Text(
@@ -66,6 +69,7 @@ class MealDetail extends StatelessWidget {
               ),
               _createSectionTitle(context, 'Passos'),
               _createSectionContainer(
+                context,
                 ListView.builder(
                   itemCount: meal.steps.length,
                   itemBuilder: (ctx, index) {
@@ -73,7 +77,10 @@ class MealDetail extends StatelessWidget {
                       children: [
                         ListTile(
                           leading: CircleAvatar(child: Text('${index + 1}')),
-                          title: Text(meal.steps[index]),
+                          title: Text(
+                            meal.steps[index],
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                         if (meal.steps[index] != meal.steps.last) Divider(),
                       ],
@@ -86,10 +93,12 @@ class MealDetail extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        splashColor: Theme.of(context).primaryColor,
+        shape: CircleBorder(),
         onPressed: () {
-          Navigator.of(context).pop(meal.title);
+          onToggleFavorite(meal);
         },
-        child: Icon(Icons.star),
+        child: Icon(isFavorite(meal) ? Icons.star : Icons.star_border),
       ),
     );
   }
